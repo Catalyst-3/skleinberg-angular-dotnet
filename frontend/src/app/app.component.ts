@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
   todos: any;
   
   ngOnInit(): void {
-    this.http.get('http://localhost:5000/api/todo').subscribe({
+    this.http.get('http://localhost:8080/api/todo').subscribe({
       next: response => this.todos = response,
       error: error  => console.log(error),
       complete: () => console.log('Request has completed')

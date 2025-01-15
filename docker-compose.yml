@@ -6,14 +6,12 @@ services:
     ports:
       - "4200:4200"
     volumes:
-      - ./frontend:/app
-    stdin_open: true
-    tty: true
+      - ./frontend:/src/app/src
 
   backend:
     build: ./backend
     ports:
-      - "5000:5000"
+      - "8080:8080"
     depends_on:
       - db
 
