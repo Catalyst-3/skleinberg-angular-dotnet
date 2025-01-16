@@ -1,10 +1,14 @@
 services:
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        API_URL: ${API_URL}
     ports:
       - "4200:4200"
-    volumes:
-      - ./frontend:/src/app/src
+    environment:
+      API_URL: ${API_URL}
+
 
   backend:
     build: ./backend
