@@ -5,6 +5,7 @@ RUN dotnet restore
 RUN dotnet publish -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
+EXPOSE 8080
 WORKDIR /app
 COPY --from=build /app/out .
 ENTRYPOINT ["dotnet", "backend.dll"]
