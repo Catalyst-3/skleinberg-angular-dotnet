@@ -1,0 +1,9 @@
+<div class="container" style="margin-top: 100px;">
+    <ul>
+        @for (todo of todos; track todo.id) {
+        <li>
+            {{todo.id}} - {{todo.title}}
+        </li>
+        }
+    </ul>
+</div>

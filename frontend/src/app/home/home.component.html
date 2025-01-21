@@ -1,0 +1,21 @@
+<div class="container mt-5">
+    <div style="text-align: center;">
+        
+        @if (!createTodoMode) {
+            <h1>Welcome to Stevens Todo App</h1>
+            <p>Never forget what you have to do again!</p>
+            <div class="text-center">
+                <button (click)="createTodoModeToggle()" class="btn btn-primary btn-lg me-2">Create a Todo</button>
+            </div>
+        } @else {
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-4">
+                        <app-form (cancelCreateTodo)="cancelCreateTodo($event)"></app-form>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

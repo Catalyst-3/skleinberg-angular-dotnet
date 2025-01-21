@@ -1,9 +1,5 @@
-<h1>{{title}}</h1>
-
-<ul>
-    @for (todo of todos; track todo.id) {
-        <li>
-            {{todo.id}} - {{todo.title}}
-        </li>
-    }
-</ul>
+<app-nav></app-nav>
+<div class="container" style="margin-top: 100px;">
+    <app-home></app-home>
+</div>
+<app-list></app-list>
