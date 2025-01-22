@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { TodoListComponent } from './todoList.component';
+import { TodoListComponent } from './todo-list.component';
 import { environment } from '../../environments/environment';
 
 describe('ListComponent', () => {

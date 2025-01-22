@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TodoListComponent } from "../todoList/todoList.component";
+import { TodoListComponent } from "../todo-list/todo-list.component";
 
 
 @Component({

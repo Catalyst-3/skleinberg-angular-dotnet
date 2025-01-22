@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HomeComponent } from './home.component';
-import { TodoListComponent } from '../todoList/todoList.component';
+import { TodoListComponent } from '../todo-list/todo-list.component';
 import { ComponentFixture } from '@angular/core/testing';
 
 describe('HomeComponent', () => {

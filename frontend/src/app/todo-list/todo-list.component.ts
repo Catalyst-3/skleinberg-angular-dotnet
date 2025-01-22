@@ -5,8 +5,8 @@ import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-todo-list',
   imports: [],
-  templateUrl: './todoList.component.html',
-  styleUrl: './todoList.component.css'
+  templateUrl: './todo-list.component.html',
+  styleUrl: './todo-list.component.css'
 })
 export class TodoListComponent implements OnInit {
 http = inject(HttpClient);
