@@ -1,4 +1,5 @@
 using backend.Data;
+using backend.DTOs;
 using backend.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,5 +26,20 @@ public class TodoController(DataContext context): ControllerBase
         if (todoItem == null) return NotFound();
         
         return todoItem;
+    }
+
+    [HttpPost("create")]
+    public async Task<ActionResult<TodoItem>> Create(TodoDto TodoDto)
+    {
+        var todo = new TodoItem
+        {
+            Title = TodoDto.Title
+        };
+
+
+        context.TodoItems.Add(todo);
+        await context.SaveChangesAsync();
+
+        return todo;
     }
 }
