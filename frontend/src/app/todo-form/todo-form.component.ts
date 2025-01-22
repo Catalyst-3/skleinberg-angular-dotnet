@@ -15,10 +15,8 @@ export class TodoFormComponent {
   model: any = {};
 
   createTodo() {
-    console.log(this.model);
     this.todoService.createTodo(this.model).subscribe({
       next: response => {
-        console.log(response);
         this.cancel();
       }, 
       error: error => console.log(error)
@@ -26,7 +24,6 @@ export class TodoFormComponent {
 
   }
   cancel(){
-    console.log("cancel");
     this.toggleCreateTodoMode.emit();
   }
 }
