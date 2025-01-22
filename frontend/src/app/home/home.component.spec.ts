@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HomeComponent } from './home.component';
-import { ListComponent } from '../list/list.component';
+import { TodoListComponent } from '../todoList/todoList.component';
 import { ComponentFixture } from '@angular/core/testing';
 
 describe('HomeComponent', () => {
@@ -12,7 +12,7 @@ describe('HomeComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         HomeComponent,
-        ListComponent, 
+        TodoListComponent, 
       ],
       providers: [
         provideHttpClient(),
@@ -48,7 +48,7 @@ describe('HomeComponent', () => {
 
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain("Welcome to Stevens Todo App");
-    expect(compiled.querySelector('app-list')).toBeTruthy();
+    expect(compiled.querySelector('app-todo-list')).toBeTruthy();
     expect(compiled.querySelector('button')?.textContent).toContain('Create a Todo');
   });
 

@@ -3,12 +3,12 @@ import { Component, inject, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
 
 @Component({
-  selector: 'app-list',
+  selector: 'app-todo-list',
   imports: [],
-  templateUrl: './list.component.html',
-  styleUrl: './list.component.css'
+  templateUrl: './todoList.component.html',
+  styleUrl: './todoList.component.css'
 })
-export class ListComponent implements OnInit {
+export class TodoListComponent implements OnInit {
 http = inject(HttpClient);
   apiUrl = environment.apiUrl;
   listName = "Your Current todo list";

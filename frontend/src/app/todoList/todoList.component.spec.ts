@@ -1,21 +1,21 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ListComponent } from './list.component';
+import { TodoListComponent } from './todoList.component';
 import { environment } from '../../environments/environment';
 
 describe('ListComponent', () => {
-  let component: ListComponent;
+  let component: TodoListComponent;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule, // Import the testing module for HttpClient
-        ListComponent,          // Import the standalone component
+        TodoListComponent,          // Import the standalone component
       ],
     });
 
-    const fixture = TestBed.createComponent(ListComponent);
+    const fixture = TestBed.createComponent(TodoListComponent);
     component = fixture.componentInstance;
     httpMock = TestBed.inject(HttpTestingController);
   });

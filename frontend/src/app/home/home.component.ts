@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { ListComponent } from "../list/list.component";
+import { TodoListComponent } from "../todoList/todoList.component";
+
 
 @Component({
   selector: 'app-home',
-  imports: [ListComponent],
+  imports: [TodoListComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
