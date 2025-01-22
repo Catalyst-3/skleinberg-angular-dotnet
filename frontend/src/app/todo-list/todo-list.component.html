@@ -1,0 +1,11 @@
+<div class="container mt-5">
+    <h1 class="text-center mb-4">{{ listName }}</h1>
+    <ul class="list-group">
+      @for (todo of todos; track todo.id) {
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span><strong>ID:</strong> {{todo.id}} - <strong>Title:</strong> {{todo.title}}</span>
+        <button class="btn btn-sm btn-danger" (click)="deleteTodo(todo.id)">Delete</button>
+      </li>
+      }
+    </ul>
+  </div>
