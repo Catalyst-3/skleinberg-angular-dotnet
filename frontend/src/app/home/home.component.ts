@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormComponent } from "../form/form.component";
+import { ListComponent } from "../list/list.component";
 
 @Component({
   selector: 'app-home',
-  imports: [FormComponent],
+  imports: [FormComponent, ListComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

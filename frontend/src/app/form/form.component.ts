@@ -18,6 +18,7 @@ export class FormComponent {
     this.todoService.createTodo(this.model).subscribe({
       next: response => {
         console.log(response);
+        this.cancel();
       }, 
       error: error => console.log(error)
     })

@@ -26,4 +26,19 @@ public class TodoController(DataContext context): ControllerBase
         
         return todoItem;
     }
+
+    [HttpPost("create")]
+    public async Task<ActionResult<TodoItem>> Create(CreateTodoDto createTodoDto)
+    {
+        var todo = new TodoItem
+        {
+            Title = createTodoDto.Title
+        };
+
+        
+        context.TodoItems.Add(todo);
+        await context.SaveChangesAsync();
+
+        return todo;
+    }
 }

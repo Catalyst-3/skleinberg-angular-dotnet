@@ -10,7 +10,7 @@ export class TodoService {
   baseUrl = environment.apiUrl;
 
   createTodo(model: any) {
-    return this.http.post(this.baseUrl + 'todo/create', model);
+    return this.http.post(this.baseUrl + '/api/todo/create', model);
   }
 
   getAllTodos() {
