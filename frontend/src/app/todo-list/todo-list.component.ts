@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { TodoService } from '../_services/todo.service';
 
 @Component({
   selector: 'app-todo-list',
@@ -9,15 +10,14 @@ import { environment } from '../../environments/environment';
   styleUrl: './todo-list.component.css'
 })
 export class TodoListComponent implements OnInit {
-http = inject(HttpClient);
-  apiUrl = environment.apiUrl;
+  private todoService = inject(TodoService);
   listName = "Your Current todo list";
   todos: any;
   
   ngOnInit(): void {
-    this.http.get(this.apiUrl + "/api/todo").subscribe({
+    this.todoService.getAllTodos().subscribe({
       next: response => this.todos = response,
-      error: error  => console.log(error),
+      error: error => console.log(error),
       complete: () => console.log('Request has completed')
     })
   }
