@@ -1,0 +1,32 @@
+# Build Folders
+bin/
+obj/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+
+# Visual Studio Code settings
+.vscode/
+*.code-workspace
+
+# Test Results
+TestResults/
+*.trx
+*.coverage
+
+# Logs
+*.log
+
+# Temporary files
+*.temp
+*.tmp
+~$*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
