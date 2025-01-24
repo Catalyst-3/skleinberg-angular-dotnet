@@ -1,5 +1,6 @@
 import { Component, inject, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TodoService } from '../_services/todo.service';
 
 
 @Component({
@@ -9,15 +10,20 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './todo-form.component.css'
 })
 export class TodoFormComponent {
+  private todoService = inject(TodoService);
   toggleCreateTodoMode = output();
   model: any = {};
 
   createTodo() {
-    console.log(this.model);
+    this.todoService.createTodo(this.model).subscribe({
+      next: response => {
+        this.cancel();
+      }, 
+      error: error => console.log(error)
+    })
 
   }
   cancel(){
-    console.log("cancel");
     this.toggleCreateTodoMode.emit();
   }
 }

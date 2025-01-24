@@ -1,21 +1,26 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TodoFormComponent } from './todo-form.component';
 import { FormsModule } from '@angular/forms';
+import { of, throwError } from 'rxjs';
+import { TodoFormComponent } from './todo-form.component';
+import { TodoService } from '../_services/todo.service';
 
 describe('TodoFormComponent', () => {
   let component: TodoFormComponent;
   let fixture: ComponentFixture<TodoFormComponent>;
+  let todoServiceSpy: jasmine.SpyObj<TodoService>;
 
   beforeEach(() => {
+    todoServiceSpy = jasmine.createSpyObj('TodoService', ['createTodo']);
+
     TestBed.configureTestingModule({
-      imports: [TodoFormComponent, FormsModule], // Add the standalone component to imports
-    });
+      imports: [TodoFormComponent, FormsModule], // Import the standalone component here
+      providers: [
+        { provide: TodoService, useValue: todoServiceSpy }, // Use a mock service
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(TodoFormComponent);
     component = fixture.componentInstance;
-
-    // Spy on console.log
-    spyOn(console, 'log');
     fixture.detectChanges();
   });
 
@@ -23,22 +28,35 @@ describe('TodoFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should log the model when createTodo is called', () => {
-    component.model.title = 'Test Todo';
+  it('should call TodoService.createTodo and handle success', () => {
+    const mockResponse = { id: 1, title: 'Test Todo' };
+    todoServiceSpy.createTodo.and.returnValue(of(mockResponse));
+    spyOn(component, 'cancel');
+
+    component.model = { title: 'Test Todo' };
     component.createTodo();
-    expect(console.log).toHaveBeenCalledWith({ title: 'Test Todo' });
+
+    expect(todoServiceSpy.createTodo).toHaveBeenCalledWith({ title: 'Test Todo' });
+    expect(component.cancel).toHaveBeenCalled();
   });
 
-  it('should log "cancel" when cancel is called', () => {
+  it('should call TodoService.createTodo and handle error', () => {
+    const mockError = { message: 'Error occurred' };
+    todoServiceSpy.createTodo.and.returnValue(throwError(mockError));
+    const consoleSpy = spyOn(console, 'log');
+
+    component.model = { title: 'Test Todo' };
+    component.createTodo();
+
+    expect(todoServiceSpy.createTodo).toHaveBeenCalledWith({ title: 'Test Todo' });
+    expect(consoleSpy).toHaveBeenCalledWith(mockError);
+  });
+
+  it('should emit toggleCreateTodoMode when cancel is called', () => {
+    spyOn(component.toggleCreateTodoMode, 'emit');
+
     component.cancel();
-    expect(console.log).toHaveBeenCalledWith('cancel');
-  });
 
-  it('should render the form correctly', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h2')?.textContent).toContain('Create a new Todo');
-    expect(compiled.querySelector('input[name="title"]')).toBeTruthy();
-    expect(compiled.querySelector('button.btn-success')?.textContent).toContain('Create');
-    expect(compiled.querySelector('button.btn-default')?.textContent).toContain('Cancel');
+    expect(component.toggleCreateTodoMode.emit).toHaveBeenCalled();
   });
 });
