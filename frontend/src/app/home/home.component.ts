@@ -15,6 +15,6 @@ export class HomeComponent {
   constructor(private router: Router) {}
 
   navigateToCreateTodo() {
-    this.router.navigate(['/todos/create']);
+    this.router.navigateByUrl('/todos/create');
   }
 }
