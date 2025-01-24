@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TodoListComponent } from "../todo-list/todo-list.component";
 import { TodoFormComponent } from "../todo-form/todo-form.component";
 import { Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  constructor(private router: Router) {}
+    private router = inject(Router);
 
   navigateToCreateTodo() {
     this.router.navigateByUrl('/todos/create');
