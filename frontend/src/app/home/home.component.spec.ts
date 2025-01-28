@@ -1,28 +1,29 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { provideRouter, Router } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
+import { Location } from '@angular/common';
 import { HomeComponent } from './home.component';
 import { TodoListComponent } from '../todo-list/todo-list.component';
-import { TodoFormComponent } from '../todo-form/todo-form.component';
-import { ComponentFixture } from '@angular/core/testing';
+import { routes } from '../app.routes';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
+  let router: Router;
+  let location: Location;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        HomeComponent,
-        TodoListComponent,
-        TodoFormComponent,
-      ],
-      providers: [
-        provideHttpClient(),
-      ],
-    });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      providers: [provideRouter(routes), provideHttpClient()],
+      imports: [HomeComponent, TodoListComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    location = TestBed.inject(Location);
+
+    router.initialNavigation();
     fixture.detectChanges();
   });
 
@@ -30,52 +31,19 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have createTodoMode as false initially', () => {
-    expect(component.createTodoMode).toBeFalse();
-  });
-
-  it('should toggle createTodoMode when createTodoModeToggle is called', () => {
-    expect(component.createTodoMode).toBeFalse();
-
-    component.toggleCreateTodoMode();
-    expect(component.createTodoMode).toBeTrue();
-
-    component.toggleCreateTodoMode();
-    expect(component.createTodoMode).toBeFalse();
-  });
-
-  it('should render the welcome message and app-list when createTodoMode is false', () => {
-    component.createTodoMode = false;
-    fixture.detectChanges();
-
+  it('should render the welcome message and app-todo-list', () => {
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain("Welcome to Stevens Todo App");
+    expect(compiled.querySelector('h1')?.textContent).toContain('Welcome to Stevens Todo App');
     expect(compiled.querySelector('app-todo-list')).toBeTruthy();
-    expect(compiled.querySelector('app-todo-form')).toBeFalsy();
-    expect(compiled.querySelector('button')?.textContent).toContain('Create a Todo');
   });
 
-  it('should render the form section and cancel button when createTodoMode is true', () => {
-    component.createTodoMode = true;
-    fixture.detectChanges();
-
+  it('should navigate to /todos/create when Create a Todo button is clicked', async () => {
     const compiled = fixture.nativeElement as HTMLElement;
+    const button = compiled.querySelector('button');
+    button?.click();
 
-    expect(compiled.querySelector('app-todo-form')).toBeTruthy();
-    expect(compiled.querySelector('app-todo-list')).toBeFalsy();
-  });
-
-  it('should toggle createTodoMode when the cancel button is clicked', () => {
-    component.createTodoMode = true;
-    fixture.detectChanges();
-
-    const compiled = fixture.nativeElement as HTMLElement;
-    const cancelButton = compiled.querySelector('app-todo-form button[type="button"]');
-    cancelButton?.dispatchEvent(new Event('click'));
-
-    fixture.detectChanges();
-    expect(component.createTodoMode).toBeFalse();
-    expect(compiled.querySelector('h1')?.textContent).toContain("Welcome to Stevens Todo App");
-    expect(compiled.querySelector('app-todo-list')).toBeTruthy();
+    await router.navigate(['/todos/create']);
+    await fixture.whenStable();
+    expect(location.path()).toBe('/todos/create');
   });
 });

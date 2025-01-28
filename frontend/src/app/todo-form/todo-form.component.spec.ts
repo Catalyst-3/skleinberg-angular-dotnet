@@ -1,26 +1,35 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { provideRouter, Router } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { TodoFormComponent } from './todo-form.component';
 import { TodoService } from '../_services/todo.service';
+import { routes } from '../app.routes';
 
 describe('TodoFormComponent', () => {
   let component: TodoFormComponent;
   let fixture: ComponentFixture<TodoFormComponent>;
   let todoServiceSpy: jasmine.SpyObj<TodoService>;
+  let routerSpy: jasmine.SpyObj<Router>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     todoServiceSpy = jasmine.createSpyObj('TodoService', ['createTodo']);
+    routerSpy = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
 
-    TestBed.configureTestingModule({
-      imports: [TodoFormComponent, FormsModule], // Import the standalone component here
+    await TestBed.configureTestingModule({
       providers: [
-        { provide: TodoService, useValue: todoServiceSpy }, // Use a mock service
+        provideRouter(routes),
+        provideHttpClient(),
+        { provide: TodoService, useValue: todoServiceSpy },
+        { provide: Router, useValue: routerSpy },
       ],
+      imports: [FormsModule, TodoFormComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TodoFormComponent);
     component = fixture.componentInstance;
+
     fixture.detectChanges();
   });
 
@@ -28,19 +37,18 @@ describe('TodoFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call TodoService.createTodo and handle success', () => {
+  it('should call TodoService.createTodo and navigate to / on success', () => {
     const mockResponse = { id: 1, title: 'Test Todo' };
     todoServiceSpy.createTodo.and.returnValue(of(mockResponse));
-    spyOn(component, 'cancel');
 
     component.model = { title: 'Test Todo' };
     component.createTodo();
 
     expect(todoServiceSpy.createTodo).toHaveBeenCalledWith({ title: 'Test Todo' });
-    expect(component.cancel).toHaveBeenCalled();
+    expect(routerSpy.navigateByUrl).toHaveBeenCalledWith('/');
   });
 
-  it('should call TodoService.createTodo and handle error', () => {
+  it('should call TodoService.createTodo and log error on failure', () => {
     const mockError = { message: 'Error occurred' };
     todoServiceSpy.createTodo.and.returnValue(throwError(mockError));
     const consoleSpy = spyOn(console, 'log');
@@ -52,11 +60,9 @@ describe('TodoFormComponent', () => {
     expect(consoleSpy).toHaveBeenCalledWith(mockError);
   });
 
-  it('should emit toggleCreateTodoMode when cancel is called', () => {
-    spyOn(component.toggleCreateTodoMode, 'emit');
-
+  it('should navigate to / when cancel is called', () => {
     component.cancel();
 
-    expect(component.toggleCreateTodoMode.emit).toHaveBeenCalled();
+    expect(routerSpy.navigateByUrl).toHaveBeenCalledWith('/');
   });
 });
