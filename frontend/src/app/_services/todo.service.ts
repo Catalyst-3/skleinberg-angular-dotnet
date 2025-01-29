@@ -16,4 +16,8 @@ export class TodoService {
   getAllTodos() {
     return this.http.get(this.baseUrl + "/api/todo");
   }
+
+  getTodoById(id: number){
+    return this.http.get(`${this.baseUrl}/api/todo/${id}`);
+  }
 }

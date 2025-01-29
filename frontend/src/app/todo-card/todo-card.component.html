@@ -1,0 +1,20 @@
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title">Todo Details</h5>
+
+        @if (todoNotFound) {
+        <div class="alert alert-danger">
+            <p><strong>Error:</strong> Todo not found.</p>
+        </div>
+        <button (click)="navigateToList()" class="btn btn-primary">Back to List</button>
+        } @else if (!todoReceived) {
+        <p>Loading...</p>
+        } @else {
+        <div>
+            <p><strong>ID:</strong> {{ todo.id }}</p>
+            <p><strong>Title:</strong> {{ todo.title }}</p>
+            <button (click)="navigateToList()" class="btn btn-primary">Back to List</button>
+        </div>
+        }
+    </div>
+</div>
