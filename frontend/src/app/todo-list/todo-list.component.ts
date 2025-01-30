@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { TodoService } from '../_services/todo.service';
+import { Todo } from '../_models/todo';
 
 @Component({
   selector: 'app-todo-list',
@@ -12,11 +13,15 @@ import { TodoService } from '../_services/todo.service';
 export class TodoListComponent implements OnInit {
   private todoService = inject(TodoService);
   listName = "Your Current todo list";
-  todos: any;
+  todos: Todo[] = [];
   
   ngOnInit(): void {
+    this.loadTodos();
+  }
+
+  loadTodos(){
     this.todoService.getAllTodos().subscribe({
-      next: response => this.todos = response,
+      next: todos => this.todos = todos,
       error: error => console.log(error),
       complete: () => console.log('Request has completed')
     })
