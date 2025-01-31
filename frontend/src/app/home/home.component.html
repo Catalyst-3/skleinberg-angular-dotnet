@@ -1,10 +1,21 @@
-<div class="container mt-5">
-    <div style="text-align: center;">
-        <h1>Welcome to Stevens Todo App</h1>
-        <p>Never forget what you have to do again!</p>
-        <div class="text-center">
-            <button (click)="navigateToCreateTodo()" class="btn btn-primary btn-lg me-2">Create a Todo</button>
+<main>
+    <section class="py-5 text-center container">
+      <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+          <h1 class="fw-light">Welcome to Stevens Todo App</h1>
+          <p class="lead text-body-secondary">
+            Never forget what you have to do again! Stay organized and on top of your tasks effortlessly.
+          </p>
+          <p>
+            <button (click)="navigateToCreateTodo()" class="btn btn-primary my-2">Create a Todo</button>
+          </p>
         </div>
+      </div>
+    </section>
+  
+    <div class="album py-5 bg-body-tertiary">
+      <div class="container">
         <app-todo-list></app-todo-list>
+      </div>
     </div>
-</div>
+  </main>
