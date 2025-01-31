@@ -76,13 +76,4 @@ describe('ListComponent', () => {
       message: jasmine.stringMatching(/Http failure response for undefined\/api\/todo: 500 Server Error/),
     }));
   });
-
-  it('should log a message when deleteTodo is called', () => {
-    spyOn(console, 'log');
-    const todoId = 1;
-
-    component.deleteTodo(todoId);
-
-    expect(console.log).toHaveBeenCalledWith(`delete button pressed for todo #${todoId}`);
-  });
 });

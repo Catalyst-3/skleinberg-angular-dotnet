@@ -1,0 +1,9 @@
+.clickable-title {
+    text-decoration: none; 
+    cursor: pointer; 
+  }
+  
+  .clickable-title:hover {
+    text-decoration: underline; 
+  }
+  

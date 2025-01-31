@@ -10,6 +10,7 @@ import { Todo } from '../_models/todo';
 })
 export class TodoCardComponent implements OnInit {
   @Input() todo?: Todo;
+  @Input() isInList: boolean = false;
   private route = inject(ActivatedRoute);
   private todoService = inject(TodoService);
   private router = inject(Router);
@@ -56,6 +57,12 @@ export class TodoCardComponent implements OnInit {
   deleteTodo() {
     if( this.todo){
       console.log(`Todo #${this.todo.id} marked as deleted`);
+    }
+  }
+
+  navigateToTodoItem() {
+    if (this.todo) {
+      this.router.navigateByUrl(`/todos/${this.todo.id}`);
     }
   }
 }

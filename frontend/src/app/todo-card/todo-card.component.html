@@ -1,27 +1,50 @@
-<div class="card mt-3 shadow-sm mx-auto" style="max-width: 500px;">
-  <div class="card-body position-relative">
-  
+<div
+  class="card shadow-sm h-100 mx-auto"
+  style="width: 350px; height: 220px;"
+>
+  <div class="card-body position-relative d-flex flex-column">
+    
     @if (todo?.isComplete) {
       <span class="badge text-bg-success rounded-pill position-absolute top-0 end-0 me-3 mt-2">Complete</span>
     }
 
-    <p class="fs-5 text-center mt-4 mb-3"><strong>{{ todo?.title }}</strong></p>
-
-    @if (!todo && !loading) {
-      <div class="alert alert-danger text-center">
-        <p><strong>Error:</strong> Todo not found.</p>
+ 
+    @if (isInList) {
+      <div
+        class="fs-5 text-center mt-4 mb-3 flex-grow-1 text-wrap"
+        style="
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        "
+      >
+        <a
+          class="clickable-title text-dark fw-bold"
+          role="button"
+          (click)="navigateToTodoItem()"
+        >
+          <strong>{{ todo?.title }}</strong>
+        </a>
       </div>
-    } @else if (loading) {
-      <p class="text-center text-muted">Loading...</p>
     } @else {
-      <div class="d-flex justify-content-center gap-3 mt-3">
-        @if (todo?.isComplete) {
-          <button class="btn btn-secondary btn-sm w-25" (click)="toggleComplete()">Incomplete</button>
-        } @else {
-          <button class="btn btn-success btn-sm w-25" (click)="toggleComplete()">Complete</button>
-        }
-        <button class="btn btn-danger btn-sm w-25" (click)="deleteTodo()">Delete</button>
+      <div
+        class="fs-5 text-center mt-4 mb-3 flex-grow-1 text-wrap"
+        style="height: auto; overflow: visible; white-space: normal;"
+      >
+        <strong>{{ todo?.title }}</strong>
       </div>
     }
+
+    <div class="d-flex justify-content-center gap-3 mt-auto">
+      @if (todo?.isComplete) {
+        <button class="btn btn-secondary btn-sm w-50" (click)="toggleComplete()">Incomplete</button>
+      } @else {
+        <button class="btn btn-success btn-sm w-50" (click)="toggleComplete()">Complete</button>
+      }
+      <button class="btn btn-danger btn-sm w-50" (click)="deleteTodo()">Delete</button>
+    </div>
   </div>
 </div>
