@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TodoListComponent } from './todo-list.component';
 import { environment } from '../../environments/environment';
+import { Todo } from '../_models/todo';
 
 describe('ListComponent', () => {
   let component: TodoListComponent;
@@ -33,10 +34,22 @@ describe('ListComponent', () => {
   });
 
   it('should fetch todos on initialization', () => {
-    const mockTodos = [
-      { id: 1, title: 'Test Todo 1' },
-      { id: 2, title: 'Test Todo 2' },
-    ];
+  const mockTodos: Todo [] = [
+        {
+          id: 1, title: 'Todo 1',
+          created: new Date(2099, 0, 1),
+          updated: null,
+          isComplete: false,
+          isDeleted: false
+        },
+        {
+          id: 2, title: 'Todo 2',
+          created: new Date(2099, 0, 1),
+          updated: null,
+          isComplete: false,
+          isDeleted: false
+        },
+      ];
 
     component.ngOnInit();
 

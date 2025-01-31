@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TodoService } from './todo.service';
 import { environment } from '../../environments/environment';
+import { Todo } from '../_models/todo';
 
 describe('TodoService', () => {
   let service: TodoService;
@@ -37,9 +38,21 @@ describe('TodoService', () => {
   });
 
   it('should call getAllTodos with the correct URL', () => {
-    const mockTodos = [
-      { id: 1, title: 'Todo 1' },
-      { id: 2, title: 'Todo 2' },
+    const mockTodos: Todo [] = [
+      {
+        id: 1, title: 'Todo 1',
+        created: new Date(2099, 0, 1),
+        updated: null,
+        isComplete: false,
+        isDeleted: false
+      },
+      {
+        id: 2, title: 'Todo 2',
+        created: new Date(2099, 0, 1),
+        updated: null,
+        isComplete: false,
+        isDeleted: false
+      },
     ];
     service.getAllTodos().subscribe((todos) => {
       expect(todos).toEqual(mockTodos);

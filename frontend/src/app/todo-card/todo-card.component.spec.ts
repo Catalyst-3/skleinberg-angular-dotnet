@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TodoCardComponent } from './todo-card.component';
 import { TodoService } from '../_services/todo.service';
 import { environment } from '../../environments/environment';
+import { Todo } from '../_models/todo';
 
 describe('TodoCardComponent', () => {
   let component: TodoCardComponent;
@@ -42,7 +43,13 @@ describe('TodoCardComponent', () => {
   });
 
   it('should fetch the correct todo on initialization', () => {
-    const mockTodo = { id: 1, title: 'Test Todo' };
+    const mockTodo: Todo = {
+      id: 1, title: 'Todo 1',
+      created: new Date(2099, 0, 1),
+      updated: null,
+      isComplete: false,
+      isDeleted: false
+    };
 
     component.ngOnInit();
 
@@ -52,29 +59,44 @@ describe('TodoCardComponent', () => {
     req.flush(mockTodo);
 
     expect(component.todo).toEqual(mockTodo);
-    expect(component.todoReceived).toBeTrue();
-    expect(component.todoNotFound).toBeFalse();
   });
 
   it('should handle an invalid todo ID', () => {
     activatedRouteStub.snapshot.paramMap.get = () => 'invalid';
     component.ngOnInit();
 
-    expect(component.todoNotFound).toBeTrue();
+    expect(component.todo.id).toBe(-1);
   });
 
-  it('should set todoNotFound to true when API returns an error', () => {
+  it('should set loading to false and log error when API returns an error', () => {
     spyOn(console, 'log');
     component.ngOnInit();
 
     const req = httpMock.expectOne(`${environment.apiUrl}/api/todo/1`);
     req.flush('Todo not found', { status: 404, statusText: 'Not Found' });
 
-    expect(component.todoNotFound).toBeTrue();
+    expect(component.loading).toBeFalse();
     expect(console.log).toHaveBeenCalledWith(jasmine.objectContaining({
       status: 404,
       statusText: 'Not Found'
     }));
+  });
+
+  it('should toggle isComplete when toggleComplete() is called', () => {
+    component.todo = {
+      id: 1,
+      title: 'Test Todo',
+      created: new Date(2099, 0, 1),
+      updated: null,
+      isComplete: false,
+      isDeleted: false
+    };
+
+    component.toggleComplete();
+    expect(component.todo.isComplete).toBeTrue();
+
+    component.toggleComplete();
+    expect(component.todo.isComplete).toBeFalse();
   });
 
   it('should navigate back to the todo list when navigateToList() is called', () => {
