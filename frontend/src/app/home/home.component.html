@@ -1,21 +1,21 @@
 <main>
-    <section class="py-5 text-center container">
-      <div class="row py-lg-5">
-        <div class="col-lg-6 col-md-8 mx-auto">
-          <h1 class="fw-light">Welcome to Stevens Todo App</h1>
-          <p class="lead text-body-secondary">
-            Never forget what you have to do again! Stay organized and on top of your tasks effortlessly.
-          </p>
-          <p>
-            <button (click)="navigateToCreateTodo()" class="btn btn-primary my-2">Create a Todo</button>
-          </p>
+    <section class="py-3 text-center container"> <!-- Changed py-5 to py-3 -->
+        <div class="row py-lg-4"> <!-- Reduced inner padding -->
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">Welcome to Stevens Todo App</h1>
+                <p class="lead text-body-secondary">
+                    Never forget what you have to do again! Stay organized and on top of your tasks effortlessly.
+                </p>
+                <p>
+                    <button (click)="navigateToCreateTodo()" class="btn btn-primary my-2">Create a Todo</button>
+                </p>
+            </div>
         </div>
-      </div>
     </section>
-  
+
     <div class="album py-5 bg-body-tertiary">
-      <div class="container">
-        <app-todo-list></app-todo-list>
-      </div>
+        <div class="container">
+            <app-todo-list></app-todo-list>
+        </div>
     </div>
-  </main>
+</main>
