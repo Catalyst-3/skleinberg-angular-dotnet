@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TodoService } from '../_services/todo.service';
 import { Todo } from '../_models/todo';
@@ -9,26 +9,20 @@ import { Todo } from '../_models/todo';
   styleUrls: ['./todo-card.component.css']
 })
 export class TodoCardComponent implements OnInit {
+  @Input() todo?: Todo;
   private route = inject(ActivatedRoute);
   private todoService = inject(TodoService);
   private router = inject(Router);
   loading: boolean = false;
 
-  todo: Todo = {
-    id: -1,
-    title: "",
-    created: new Date(2099, 0, 1),
-    updated: null,
-    isComplete: false,
-    isDeleted: false
-  };
-
   ngOnInit(): void {
-    const id = this.getValidatedId();
-    if (id === null) {
-      return;
+    if (!this.todo) {
+      const id = this.getValidatedId();
+      if (id === null) {
+        return;
+      }
+      this.loadTodo(id);
     }
-    this.loadTodo(id);
   }
 
   getValidatedId() {
@@ -52,17 +46,17 @@ export class TodoCardComponent implements OnInit {
     });
   }
 
-  toggleComplete(){
-    this.todo.isComplete = !this.todo.isComplete;
-    console.log(`Todo #${this.todo.id} marked as ${this.todo.isComplete ? 'complete' : 'incomplete'}`);
+  toggleComplete() {
+    if( this.todo){
+      this.todo.isComplete = !this.todo.isComplete;
+      console.log(`Todo #${this.todo.id} marked as ${this.todo.isComplete ? 'complete' : 'incomplete'}`);
+    }
   }
 
-  deleteTodo(){
-    console.log(`Todo #${this.todo.id} marked as deleted`);
-  }
-
-  navigateToList(){
-    this.router.navigateByUrl('/todos');
+  deleteTodo() {
+    if( this.todo){
+      console.log(`Todo #${this.todo.id} marked as deleted`);
+    }
   }
 }
 

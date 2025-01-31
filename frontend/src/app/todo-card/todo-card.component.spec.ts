@@ -15,15 +15,15 @@ describe('TodoCardComponent', () => {
 
   beforeEach(() => {
     activatedRouteStub = { snapshot: { paramMap: { get: () => '1' } } };
-    routerSpy = jasmine.createSpyObj('Router', ['navigateByUrl']); 
+    routerSpy = jasmine.createSpyObj('Router', ['navigateByUrl']);
 
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
       ],
       providers: [
-        TodoCardComponent, 
-        TodoService, 
+        TodoCardComponent,
+        TodoService,
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: Router, useValue: routerSpy },
       ],
@@ -42,7 +42,7 @@ describe('TodoCardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should fetch the correct todo on initialization', () => {
+  it('should fetch the correct todo on initialization when no todo is provided', () => {
     const mockTodo: Todo = {
       id: 1, title: 'Todo 1',
       created: new Date(2099, 0, 1),
@@ -61,11 +61,27 @@ describe('TodoCardComponent', () => {
     expect(component.todo).toEqual(mockTodo);
   });
 
+  it('should not fetch data if todo is provided as input', () => {
+    component.todo = {
+      id: 2,
+      title: 'Injected Todo',
+      created: new Date(2099, 0, 1),
+      updated: null,
+      isComplete: false,
+      isDeleted: false
+    };
+
+    component.ngOnInit();
+    httpMock.expectNone(`${environment.apiUrl}/api/todo/2`);
+  });
+
+
   it('should handle an invalid todo ID', () => {
     activatedRouteStub.snapshot.paramMap.get = () => 'invalid';
     component.ngOnInit();
 
-    expect(component.todo.id).toBe(-1);
+    expect(component.todo).toBeUndefined();
+    httpMock.expectNone(`${environment.apiUrl}/api/todo/invalid`);
   });
 
   it('should set loading to false and log error when API returns an error', () => {
@@ -97,11 +113,5 @@ describe('TodoCardComponent', () => {
 
     component.toggleComplete();
     expect(component.todo.isComplete).toBeFalse();
-  });
-
-  it('should navigate back to the todo list when navigateToList() is called', () => {
-    component.navigateToList();
-
-    expect(routerSpy.navigateByUrl).toHaveBeenCalledWith('/todos');
   });
 });
