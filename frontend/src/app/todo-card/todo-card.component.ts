@@ -12,47 +12,56 @@ export class TodoCardComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private todoService = inject(TodoService);
   private router = inject(Router);
+  loading: boolean = false;
 
-  todoReceived = false;
-  todoNotFound = false;
   todo: Todo = {
-    id: 0,
+    id: -1,
     title: "",
-    created: null,
+    created: new Date(2099, 0, 1),
     updated: null,
     isComplete: false,
     isDeleted: false
   };
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-
-    if (isNaN(id) || id <= 0) {
-      this.todoNotFound = true;
+    const id = this.getValidatedId();
+    if (id === null) {
       return;
     }
-
     this.loadTodo(id);
   }
 
+  getValidatedId() {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    return isNaN(id) || id <= 0 ? null : id;
+  }
+
   loadTodo(id: number) {
+    this.loading = true;
     this.todoService.getTodoById(id).subscribe({
       next: (response) => {
         if (response) {
           this.todo = response;
-          this.todoReceived = true;
-        } else {
-          this.todoNotFound = true;
+          this.loading = false;
         }
       },
       error: (error) => {
+        this.loading = false;
         console.log(error);
-        this.todoNotFound = true;
       }
     });
   }
 
-  navigateToList(): void {
+  toggleComplete(){
+    this.todo.isComplete = !this.todo.isComplete;
+    console.log(`Todo #${this.todo.id} marked as ${this.todo.isComplete ? 'complete' : 'incomplete'}`);
+  }
+
+  deleteTodo(){
+    console.log(`Todo #${this.todo.id} marked as deleted`);
+  }
+
+  navigateToList(){
     this.router.navigateByUrl('/todos');
   }
 }
