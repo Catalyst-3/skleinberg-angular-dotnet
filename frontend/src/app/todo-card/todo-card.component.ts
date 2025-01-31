@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TodoService } from '../_services/todo.service';
+import { Todo } from '../_models/todo';
 
 @Component({
   selector: 'app-todo-card',
@@ -14,7 +15,14 @@ export class TodoCardComponent implements OnInit {
 
   todoReceived = false;
   todoNotFound = false;
-  todo: any;
+  todo: Todo = {
+    id: 0,
+    title: "",
+    created: null,
+    updated: null,
+    isComplete: false,
+    isDeleted: false
+  };
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -24,6 +32,10 @@ export class TodoCardComponent implements OnInit {
       return;
     }
 
+    this.loadTodo(id);
+  }
+
+  loadTodo(id: number) {
     this.todoService.getTodoById(id).subscribe({
       next: (response) => {
         if (response) {
