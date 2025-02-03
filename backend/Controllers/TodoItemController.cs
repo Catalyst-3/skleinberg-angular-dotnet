@@ -54,6 +54,7 @@ public class TodoController(DataContext context) : ControllerBase
 
         if (todoItem == null) return NotFound();
         todoItem.IsComplete = todoDto.IsComplete;
+        todoItem.IsDeleted = todoDto.IsDeleted;
         todoItem.Updated = DateTime.UtcNow;
 
         await context.SaveChangesAsync();
