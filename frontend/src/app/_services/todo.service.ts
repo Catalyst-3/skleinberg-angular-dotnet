@@ -11,14 +11,17 @@ export class TodoService {
   baseUrl = environment.apiUrl;
 
   createTodo(model: any) {
-    return this.http.post(this.baseUrl + '/api/todo/create', model);
+    return this.http.post(`${this.baseUrl}/api/todo/create`, model);
   }
 
   getAllTodos() {
-    return this.http.get<Todo []>(this.baseUrl + "/api/todo");
+    return this.http.get<Todo []>(`${this.baseUrl}/api/todo`);
   }
 
   getTodoById(id: number){
     return this.http.get<Todo>(`${this.baseUrl}/api/todo/${id}`);
+  }
+  updateTodoIsComplete(id: number, isComplete: boolean) {
+    return this.http.patch(`${this.baseUrl}/api/todo/${id}`, { isComplete });
   }
 }
