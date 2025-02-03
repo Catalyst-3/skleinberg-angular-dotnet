@@ -7,12 +7,11 @@
     }
 
     @if (isInList) {
-      <!-- Multiline title with truncation -->
       <div
         class="fs-5 text-center mt-4 mb-3 flex-grow-1 text-wrap truncated-title"
       >
         <a
-          class="clickable-title text-dark fw-bold"
+          class="clickable-title text-dark fw-light"
           role="button"
           (click)="navigateToTodoItem()"
         >
@@ -20,9 +19,8 @@
         </a>
       </div>
     } @else {
-      <!-- Full title without truncation -->
       <div class="fs-5 text-center mt-4 mb-3 flex-grow-1 text-wrap expanded-title">
-        <strong>{{ todo?.title }}</strong>
+        <strong class="text-dark fw-light">{{ todo?.title }}</strong>
       </div>
     }
 
