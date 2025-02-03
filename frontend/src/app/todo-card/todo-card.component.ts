@@ -49,8 +49,16 @@ export class TodoCardComponent implements OnInit {
 
   toggleComplete() {
     if( this.todo){
-      this.todo.isComplete = !this.todo.isComplete;
-      console.log(`Todo #${this.todo.id} marked as ${this.todo.isComplete ? 'complete' : 'incomplete'}`);
+      const nextIsComplete = !this.todo.isComplete;
+      this.todoService.updateTodoIsComplete(this.todo.id, nextIsComplete).subscribe({
+        next: () => {
+          this.todo!.isComplete = nextIsComplete;
+          console.log(`Todo #${this.todo!.id} marked as ${this.todo!.isComplete ? 'complete' : 'incomplete'}`);
+        },
+        error: (error) => {
+          console.error('Error updating todo:', error);
+        }
+      })
     }
   }
 

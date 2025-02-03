@@ -98,7 +98,7 @@ describe('TodoCardComponent', () => {
     }));
   });
 
-  it('should toggle isComplete when toggleComplete() is called', () => {
+  it('should send a PATCH request and update isComplete when toggleComplete() is called', () => {
     component.todo = {
       id: 1,
       title: 'Test Todo',
@@ -107,11 +107,46 @@ describe('TodoCardComponent', () => {
       isComplete: false,
       isDeleted: false
     };
-
+  
+    spyOn(todoService, 'updateTodoIsComplete').and.callThrough();
+  
     component.toggleComplete();
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/todo/1`);
+    expect(req.request.method).toBe('PATCH');
+    expect(req.request.body).toEqual({ isComplete: true });
+  
+    req.flush({});
+  
+    // Ensure isComplete is updated only after API success
     expect(component.todo.isComplete).toBeTrue();
-
-    component.toggleComplete();
-    expect(component.todo.isComplete).toBeFalse();
+    expect(todoService.updateTodoIsComplete).toHaveBeenCalledWith(1, true);
   });
+
+  it('should not update isComplete if the API request fails', () => {
+    component.todo = {
+      id: 1,
+      title: 'Test Todo',
+      created: new Date(2099, 0, 1),
+      updated: null,
+      isComplete: false,
+      isDeleted: false
+    };
+  
+    spyOn(console, 'error'); 
+  
+    component.toggleComplete();
+  
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/todo/1`);
+    expect(req.request.method).toBe('PATCH');
+  
+    // Simulate an API failure
+    req.flush('Error', { status: 500, statusText: 'Internal Server Error' });
+  
+    // Ensure isComplete was NOT updated
+    expect(component.todo.isComplete).toBeFalse();
+    expect(console.error).toHaveBeenCalled();
+  });
+  
+  
 });

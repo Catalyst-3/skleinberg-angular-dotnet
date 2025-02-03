@@ -31,6 +31,10 @@ public class TodoController(DataContext context) : ControllerBase
     [HttpPost("create")] // /api/todos/create
     public async Task<ActionResult<TodoItem>> Create(TodoDto TodoDto)
     {
+        if(string.IsNullOrWhiteSpace(TodoDto.Title)){
+            return BadRequest("Title is required.");
+        }
+        
         var todo = new TodoItem
         {
             Title = TodoDto.Title
