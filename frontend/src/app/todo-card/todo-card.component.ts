@@ -15,6 +15,7 @@ export class TodoCardComponent implements OnInit {
   private todoService = inject(TodoService);
   private router = inject(Router);
   loading: boolean = false;
+  todoNotFound: boolean = false;
 
   ngOnInit(): void {
     if (!this.todo) {
@@ -43,6 +44,9 @@ export class TodoCardComponent implements OnInit {
       error: (error) => {
         this.loading = false;
         console.log(error);
+        if (error.status === 404) {
+          this.todoNotFound = true;
+        }
       }
     });
   }
@@ -64,7 +68,19 @@ export class TodoCardComponent implements OnInit {
 
   deleteTodo() {
     if( this.todo){
-      console.log(`Todo #${this.todo.id} marked as deleted`);
+      const nextIsDeleted = !this.todo.isDeleted;
+      this.todoService.updateTodoIsDeleted(this.todo.id, nextIsDeleted).subscribe({
+        next: () => {
+          this.todo!.isDeleted = nextIsDeleted;
+          console.log(`Todo #${this.todo!.id} marked as deleted`);
+          if (this.isInList) {
+            this.todoService.triggerListUpdate();
+          }
+        },
+        error: (error) => {
+          console.error('Error deleting todo:', error);
+        }
+      })      
     }
   }
 

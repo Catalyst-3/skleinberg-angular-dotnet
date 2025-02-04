@@ -2,7 +2,7 @@
   <div class="container">
     <h1 class="text-center mb-4 fw-light">{{ listName }}</h1>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-5">
-      @for (todo of todos; track todo.id) {
+      @for (todo of visibleTodos; track todo.id) {
         <div class="col d-flex justify-content-center">
           <app-todo-card [todo]="todo" [isInList]="true" class="shadow-sm"></app-todo-card>
         </div>

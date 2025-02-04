@@ -14,17 +14,28 @@ import { TodoCardComponent } from "../todo-card/todo-card.component";
 export class TodoListComponent implements OnInit {
   private todoService = inject(TodoService);
   listName = "Your Current todo list";
-  todos: Todo[] = [];
+  allTodos: Todo[] = [];
+  visibleTodos: Todo[] = [];
   
   ngOnInit(): void {
     this.loadTodos();
+    this.todoService.todoListUpdated.subscribe(() => {
+      this.filterTodos();
+    });
   }
 
   loadTodos(){
     this.todoService.getAllTodos().subscribe({
-      next: todos => this.todos = todos,
+      next: todos => {
+        this.allTodos = todos;
+        this.filterTodos(); 
+      },
       error: error => console.log(error),
       complete: () => console.log('Request has completed')
     })
+  }
+
+  filterTodos() {
+    this.visibleTodos = this.allTodos.filter(todo => !todo.isDeleted);
   }
 }
