@@ -58,7 +58,7 @@ describe('ListComponent', () => {
 
     req.flush(mockTodos);
 
-    expect(component.todos).toEqual(mockTodos);
+    expect(component.visibleTodos).toEqual(mockTodos);
   });
 
   it('should log an error if the API call fails', () => {

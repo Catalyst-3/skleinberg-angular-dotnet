@@ -118,7 +118,6 @@ describe('TodoCardComponent', () => {
   
     req.flush({});
   
-    // Ensure isComplete is updated only after API success
     expect(component.todo.isComplete).toBeTrue();
     expect(todoService.updateTodoIsComplete).toHaveBeenCalledWith(1, true);
   });
@@ -140,13 +139,106 @@ describe('TodoCardComponent', () => {
     const req = httpMock.expectOne(`${environment.apiUrl}/api/todo/1`);
     expect(req.request.method).toBe('PATCH');
   
-    // Simulate an API failure
+
     req.flush('Error', { status: 500, statusText: 'Internal Server Error' });
   
-    // Ensure isComplete was NOT updated
+  
     expect(component.todo.isComplete).toBeFalse();
     expect(console.error).toHaveBeenCalled();
   });
+
+  it('should send a PATCH request and update isDeleted when deleteTodo() is called', () => {
+    component.todo = {
+      id: 1,
+      title: 'Test Todo',
+      created: new Date(2099, 0, 1),
+      updated: null,
+      isComplete: false,
+      isDeleted: false
+    };
+
+    spyOn(todoService, 'updateTodoIsDeleted').and.callThrough();
+
+    component.deleteTodo();
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/todo/1`);
+    expect(req.request.method).toBe('PATCH');
+    expect(req.request.body).toEqual({ isDeleted: true });
+
+    req.flush({});
+
+   
+    expect(component.todo.isDeleted).toBeTrue();
+    expect(todoService.updateTodoIsDeleted).toHaveBeenCalledWith(1, true);
+  });
+
+  it('should not update isDeleted if the API request fails', () => {
+    component.todo = {
+      id: 1,
+      title: 'Test Todo',
+      created: new Date(2099, 0, 1),
+      updated: null,
+      isComplete: false,
+      isDeleted: false
+    };
+
+    spyOn(console, 'error');
+
+    component.deleteTodo();
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/todo/1`);
+    expect(req.request.method).toBe('PATCH');
+
+    req.flush('Error', { status: 500, statusText: 'Internal Server Error' });
+
+  
+    expect(component.todo.isDeleted).toBeFalse();
+    expect(console.error).toHaveBeenCalled();
+  });
+
+  it('should trigger list update when deleteTodo() is called and todo is in a list', () => {
+    component.todo = {
+      id: 1,
+      title: 'Test Todo',
+      created: new Date(2099, 0, 1),
+      updated: null,
+      isComplete: false,
+      isDeleted: false
+    };
+    component.isInList = true;
+
+    spyOn(todoService, 'triggerListUpdate').and.callThrough();
+
+    component.deleteTodo();
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/todo/1`);
+    req.flush({});
+
+    expect(todoService.triggerListUpdate).toHaveBeenCalled();
+  });
+  
+  it('should show a deleted message when deleteTodo() is called for a single todo view', () => {
+    component.todo = {
+      id: 1,
+      title: 'Test Todo',
+      created: new Date(2099, 0, 1),
+      updated: null,
+      isComplete: false,
+      isDeleted: false
+    };
+    component.isInList = false;
+  
+    component.deleteTodo();
+  
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/todo/1`);
+    req.flush({});
+  
+    
+    expect(component.todo?.isDeleted).toBeTrue();
+  
+    expect(component.todo?.isDeleted).toBeTrue(); 
+  });
+  
   
   
 });
