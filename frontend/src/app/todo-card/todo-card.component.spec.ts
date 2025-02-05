@@ -147,7 +147,7 @@ describe('TodoCardComponent', () => {
     expect(console.error).toHaveBeenCalled();
   });
 
-  it('should send a PATCH request and update isDeleted when deleteTodo() is called', () => {
+  it('should send a PATCH request and update isDeleted when toggleDeleted() is called', () => {
     component.todo = {
       id: 1,
       title: 'Test Todo',
@@ -159,7 +159,7 @@ describe('TodoCardComponent', () => {
 
     spyOn(todoService, 'updateTodoIsDeleted').and.callThrough();
 
-    component.deleteTodo();
+    component.toggleDeleted();
 
     const req = httpMock.expectOne(`${environment.apiUrl}/api/todo/1`);
     expect(req.request.method).toBe('PATCH');
@@ -184,7 +184,7 @@ describe('TodoCardComponent', () => {
 
     spyOn(console, 'error');
 
-    component.deleteTodo();
+    component.toggleDeleted();
 
     const req = httpMock.expectOne(`${environment.apiUrl}/api/todo/1`);
     expect(req.request.method).toBe('PATCH');
@@ -196,7 +196,7 @@ describe('TodoCardComponent', () => {
     expect(console.error).toHaveBeenCalled();
   });
 
-  it('should trigger list update when deleteTodo() is called and todo is in a list', () => {
+  it('should trigger list update when toggleDeleted() is called and todo is in a list', () => {
     component.todo = {
       id: 1,
       title: 'Test Todo',
@@ -209,7 +209,7 @@ describe('TodoCardComponent', () => {
 
     spyOn(todoService, 'triggerListUpdate').and.callThrough();
 
-    component.deleteTodo();
+    component.toggleDeleted();
 
     const req = httpMock.expectOne(`${environment.apiUrl}/api/todo/1`);
     req.flush({});
@@ -217,7 +217,7 @@ describe('TodoCardComponent', () => {
     expect(todoService.triggerListUpdate).toHaveBeenCalled();
   });
   
-  it('should show a deleted message when deleteTodo() is called for a single todo view', () => {
+  it('should show a deleted message when toggleDeleted() is called for a single todo view', () => {
     component.todo = {
       id: 1,
       title: 'Test Todo',
@@ -228,7 +228,7 @@ describe('TodoCardComponent', () => {
     };
     component.isInList = false;
   
-    component.deleteTodo();
+    component.toggleDeleted();
   
     const req = httpMock.expectOne(`${environment.apiUrl}/api/todo/1`);
     req.flush({});
@@ -237,6 +237,26 @@ describe('TodoCardComponent', () => {
     expect(component.todo?.isDeleted).toBeTrue();
   
     expect(component.todo?.isDeleted).toBeTrue(); 
+  });
+
+  it('should show the todo card when toggleDeleted() is called for a deleted todo in single todo view', () => {
+    component.todo = {
+      id: 1,
+      title: 'Test Todo',
+      created: new Date(2099, 0, 1),
+      updated: null,
+      isComplete: false,
+      isDeleted: true
+    };
+    component.isInList = false;
+  
+    component.toggleDeleted();
+  
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/todo/1`);
+    req.flush({});
+  
+    
+    expect(component.todo?.isDeleted).toBeFalse();
   });
   
   

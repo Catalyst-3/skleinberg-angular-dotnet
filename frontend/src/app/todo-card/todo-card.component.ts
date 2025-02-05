@@ -52,7 +52,7 @@ export class TodoCardComponent implements OnInit {
   }
 
   toggleComplete() {
-    if( this.todo){
+    if (this.todo) {
       const nextIsComplete = !this.todo.isComplete;
       this.todoService.updateTodoIsComplete(this.todo.id, nextIsComplete).subscribe({
         next: () => {
@@ -66,13 +66,13 @@ export class TodoCardComponent implements OnInit {
     }
   }
 
-  deleteTodo() {
-    if( this.todo){
+  toggleDeleted() {
+    if (this.todo) {
       const nextIsDeleted = !this.todo.isDeleted;
       this.todoService.updateTodoIsDeleted(this.todo.id, nextIsDeleted).subscribe({
         next: () => {
           this.todo!.isDeleted = nextIsDeleted;
-          console.log(`Todo #${this.todo!.id} marked as deleted`);
+          console.log(`Todo #${this.todo!.id}: marked as ${nextIsDeleted ? 'deleted' : 'not deleted '} '`);
           if (this.isInList) {
             this.todoService.triggerListUpdate();
           }
@@ -80,7 +80,7 @@ export class TodoCardComponent implements OnInit {
         error: (error) => {
           console.error('Error deleting todo:', error);
         }
-      })      
+      })
     }
   }
 

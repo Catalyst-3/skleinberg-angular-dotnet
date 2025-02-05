@@ -31,10 +31,11 @@ public class TodoController(DataContext context) : ControllerBase
     [HttpPost("create")] // /api/todos/create
     public async Task<ActionResult<TodoItem>> Create(TodoDto TodoDto)
     {
-        if(string.IsNullOrWhiteSpace(TodoDto.Title)){
+        if (string.IsNullOrWhiteSpace(TodoDto.Title))
+        {
             return BadRequest("Title is required.");
         }
-        
+
         var todo = new TodoItem
         {
             Title = TodoDto.Title
@@ -48,18 +49,22 @@ public class TodoController(DataContext context) : ControllerBase
     }
 
     [HttpPatch("{id}")] // /api/todos/{id}
-    public async Task<IActionResult> Update(int id, TodoDto todoDto)
+    public async Task<IActionResult> Update(int id, [FromBody] TodoDto todoDto)
     {
         var todoItem = await context.TodoItems.FindAsync(id);
-
         if (todoItem == null) return NotFound();
-        todoItem.IsComplete = todoDto.IsComplete;
-        todoItem.IsDeleted = todoDto.IsDeleted;
-        todoItem.Updated = DateTime.UtcNow;
 
+        if (todoDto.IsComplete is null && todoDto.IsDeleted is null)
+        {
+            return BadRequest("Invalid Request: Please provide 'isComplete' or 'isDeleted'.");
+        }
+
+        if (todoDto.IsComplete.HasValue) todoItem.IsComplete = todoDto.IsComplete.Value;
+        if (todoDto.IsDeleted.HasValue) todoItem.IsDeleted = todoDto.IsDeleted.Value;
+
+        todoItem.Updated = DateTime.UtcNow;
         await context.SaveChangesAsync();
 
         return NoContent();
-
     }
 }
