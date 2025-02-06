@@ -4,9 +4,9 @@
       <div class="col text-end mb-2">
         <select (change)="changeFilter($event)" class="form-select w-auto d-inline">
           <option value="all" [selected]="currentFilter === 'all'">All</option>
-          <option value="deleted" [selected]="currentFilter === 'deleted'">Deleted</option>
           <option value="completed" [selected]="currentFilter === 'completed'">Completed</option>
           <option value="incomplete" [selected]="currentFilter === 'incomplete'">Incomplete</option>
+          <option value="deleted" [selected]="currentFilter === 'deleted'">Deleted</option>
         </select>
       </div>
     </div>
