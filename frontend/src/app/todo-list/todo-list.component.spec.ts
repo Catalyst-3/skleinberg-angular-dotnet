@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { Todo } from '../_models/todo';
 import { of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { TodoFilter } from '../_models/todo-filter';
 
 describe('ListComponent', () => {
   let component: TodoListComponent;
@@ -94,21 +95,21 @@ describe('ListComponent', () => {
       { id: 3, title: 'Todo 3', isComplete: false, isDeleted: true },
     ] as Todo[];
 
-    component.currentFilter = 'all';
+    component.currentFilter = TodoFilter.All;
     component.filterTodos();
     expect(component.visibleTodos.length).toBe(2);
 
-    component.currentFilter = 'completed';
+    component.currentFilter = TodoFilter.Completed;
     component.filterTodos();
     expect(component.visibleTodos.length).toBe(1);
     expect(component.visibleTodos[0].id).toBe(2);
 
-    component.currentFilter = 'incomplete';
+    component.currentFilter = TodoFilter.Incomplete;
     component.filterTodos();
     expect(component.visibleTodos.length).toBe(1);
     expect(component.visibleTodos[0].id).toBe(1);
 
-    component.currentFilter = 'deleted';
+    component.currentFilter = TodoFilter.Deleted;
     component.filterTodos();
     expect(component.visibleTodos.length).toBe(1);
     expect(component.visibleTodos[0].id).toBe(3);
