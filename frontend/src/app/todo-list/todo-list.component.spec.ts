@@ -3,16 +3,27 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { TodoListComponent } from './todo-list.component';
 import { environment } from '../../environments/environment';
 import { Todo } from '../_models/todo';
+import { of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { TodoFilter } from '../_models/todo-filter';
 
 describe('ListComponent', () => {
   let component: TodoListComponent;
   let httpMock: HttpTestingController;
+  let mockActivatedRoute: any;
 
   beforeEach(() => {
+    mockActivatedRoute = {
+      queryParams: of({}),
+    };
+
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule, // Import the testing module for HttpClient
-        TodoListComponent,          // Import the standalone component
+        HttpClientTestingModule,
+        TodoListComponent,
+      ],
+      providers: [
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
       ],
     });
 
@@ -22,7 +33,7 @@ describe('ListComponent', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // Ensure no outstanding HTTP requests
+    httpMock.verify();
   });
 
   it('should create the component', () => {
@@ -34,22 +45,22 @@ describe('ListComponent', () => {
   });
 
   it('should fetch todos on initialization', () => {
-  const mockTodos: Todo [] = [
-        {
-          id: 1, title: 'Todo 1',
-          created: new Date(2099, 0, 1),
-          updated: null,
-          isComplete: false,
-          isDeleted: false
-        },
-        {
-          id: 2, title: 'Todo 2',
-          created: new Date(2099, 0, 1),
-          updated: null,
-          isComplete: false,
-          isDeleted: false
-        },
-      ];
+    const mockTodos: Todo[] = [
+      {
+        id: 1, title: 'Todo 1',
+        created: new Date(2099, 0, 1),
+        updated: null,
+        isComplete: false,
+        isDeleted: false
+      },
+      {
+        id: 2, title: 'Todo 2',
+        created: new Date(2099, 0, 1),
+        updated: null,
+        isComplete: false,
+        isDeleted: false
+      },
+    ];
 
     component.ngOnInit();
 
@@ -76,4 +87,56 @@ describe('ListComponent', () => {
       message: jasmine.stringMatching(/Http failure response for undefined\/api\/todo: 500 Server Error/),
     }));
   });
+
+  it('should filter todos correctly based on the current filter', () => {
+    component.allTodos = [
+      { id: 1, title: 'Todo 1', isComplete: false, isDeleted: false },
+      { id: 2, title: 'Todo 2', isComplete: true, isDeleted: false },
+      { id: 3, title: 'Todo 3', isComplete: false, isDeleted: true },
+    ] as Todo[];
+
+    component.currentFilter = TodoFilter.All;
+    component.filterTodos();
+    expect(component.visibleTodos.length).toBe(2);
+
+    component.currentFilter = TodoFilter.Completed;
+    component.filterTodos();
+    expect(component.visibleTodos.length).toBe(1);
+    expect(component.visibleTodos[0].id).toBe(2);
+
+    component.currentFilter = TodoFilter.Incomplete;
+    component.filterTodos();
+    expect(component.visibleTodos.length).toBe(1);
+    expect(component.visibleTodos[0].id).toBe(1);
+
+    component.currentFilter = TodoFilter.Deleted;
+    component.filterTodos();
+    expect(component.visibleTodos.length).toBe(1);
+    expect(component.visibleTodos[0].id).toBe(3);
+  });
+
+  it('should navigate with the selected filter when the dropdown value is changed', () => {
+    const routerSpy = spyOn(component['router'], 'navigate');
+    const mockEvent = {
+      target: { value: 'completed' }
+    } as unknown as Event;
+
+    component.changeFilter(mockEvent);
+
+    expect(routerSpy).toHaveBeenCalledWith(['/todos'], { queryParams: { filter: 'completed' } });
+  });
+
+  it('should default to "all" filter if no query parameter is provided', () => {
+
+    mockActivatedRoute.queryParams = of({});
+
+    component.ngOnInit();
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/todo`);
+    req.flush([]);
+
+    expect(component.currentFilter).toBe('all');
+    expect(component.visibleTodos).toEqual([]);
+  });
+
 });
