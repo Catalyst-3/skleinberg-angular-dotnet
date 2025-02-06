@@ -3,6 +3,7 @@ import { TodoService } from '../_services/todo.service';
 import { Todo } from '../_models/todo';
 import { TodoCardComponent } from "../todo-card/todo-card.component";
 import { ActivatedRoute, Router } from '@angular/router';
+import { TodoFilter } from '../_models/todo-filter';
 
 @Component({
   selector: 'app-todo-list',
@@ -18,11 +19,11 @@ export class TodoListComponent implements OnInit {
   listName = "Your Current todo list";
   allTodos: Todo[] = [];
   visibleTodos: Todo[] = [];
-  currentFilter: string = 'all';
+  currentFilter: TodoFilter = TodoFilter.All;
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.currentFilter = params['filter'] || 'all';
+      this.currentFilter = params['filter'] as TodoFilter|| TodoFilter.All;
       this.loadTodos();
     });
 
@@ -45,15 +46,15 @@ export class TodoListComponent implements OnInit {
 
   filterTodos() {
     switch (this.currentFilter) {
-      case 'deleted':
+      case TodoFilter.Deleted:
         this.visibleTodos = this.allTodos.filter(todo => todo.isDeleted);
         this.listName = "Deleted Todos";
         break;
-      case 'completed':
+      case TodoFilter.Completed:
         this.visibleTodos = this.allTodos.filter(todo => todo.isComplete && !todo.isDeleted);
         this.listName = "Completed Todos";
         break;
-      case 'incomplete':
+      case TodoFilter.Incomplete:
         this.visibleTodos = this.allTodos.filter(todo => !todo.isComplete && !todo.isDeleted);
         this.listName = "Incomplete Todos";
         break;
@@ -65,7 +66,7 @@ export class TodoListComponent implements OnInit {
   }
 
   changeFilter(event: Event) {
-    const selectedFilter = (event.target as HTMLSelectElement).value;
+    const selectedFilter = (event.target as HTMLSelectElement).value as TodoFilter;
     this.router.navigate(['/todos'], { queryParams: { filter: selectedFilter } });
   }
 }
