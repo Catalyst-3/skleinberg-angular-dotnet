@@ -37,19 +37,19 @@ Create an environment file in the root directory .env based on the example provi
 
 Ensure all .NET dependencies are installed.
 
-## Apply Database Migrations Locally
-
-Before starting Docker, apply the database migrations from the backend directory:
-
-    cd backend
-    dotnet ef database update
-
-
 ## Start the app
 Navigate to the root directory of the app, then build and start the frontend, backend, and database containers.
 
     cd ..
     docker-compose up -d --build
+
+## Apply Database Migrations Locally
+
+Apply the database migrations from the backend directory:
+
+    cd backend
+    dotnet ef database update
+
 ## Verify the app is running
 Once the containers have been built and are running you can access the app at:  http://localhost:4200/
 
