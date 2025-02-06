@@ -58,6 +58,9 @@ export class TodoCardComponent implements OnInit {
         next: () => {
           this.todo!.isComplete = nextIsComplete;
           console.log(`Todo #${this.todo!.id} marked as ${this.todo!.isComplete ? 'complete' : 'incomplete'}`);
+          if (this.isInList) {
+            this.todoService.triggerListUpdate();
+          }
         },
         error: (error) => {
           console.error('Error updating todo:', error);
